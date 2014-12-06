@@ -1,0 +1,72 @@
+Wed Mar 26 22:48:27 CET 2014
+===== 3d-test.out =====
+Files 3d-test.out and ../3d-test.out are identical
+===== barrier-test1.out =====
+1,12c1,12
+< b:start 0xd69010
+< b:start 0xd690b0
+< b:start 0xd69150
+< b:start 0xd691f0
+< b:start 0xd69290
+< b:start 0xd69330
+< b:start 0xd693d0
+< b:end 0xd69010
+< b:end 0xd690b0
+< b:end 0xd69150
+< b:end 0xd691f0
+< b:end 0xd69290
+---
+> b:start 0xdc3010
+> b:start 0xdc30b0
+> b:start 0xdc3150
+> b:start 0xdc31f0
+> b:start 0xdc3290
+> b:start 0xdc3330
+> b:start 0xdc33d0
+> b:end 0xdc3010
+> b:end 0xdc30b0
+> b:end 0xdc3150
+> b:end 0xdc31f0
+> b:end 0xdc3290
+14,15c14,15
+<   0: [0xd69330] Process#5
+<   1: [0xd693d0] Process#6
+---
+>   0: [0xdc3330] Process#5
+>   1: [0xdc33d0] Process#6
+===== barrier-test2.out =====
+151,157c151,157
+<   0: [0x804be18] Process#149
+<   1: [0x804bfd8] Process#150
+<   2: [0x804b9f8] Process#151
+<   3: [0x804bb90] Process#152
+<   4: [0x804bd28] Process#153
+<   5: [0x804bd78] Process#154
+<   6: [0x804c028] Process#155
+---
+>   0: [0x76ad70] Process#149
+>   1: [0x76a0f0] Process#150
+>   2: [0x76a4f0] Process#151
+>   3: [0x76adf0] Process#152
+>   4: [0x76a8f0] Process#153
+>   5: [0x76aac0] Process#154
+>   6: [0x76ac90] Process#155
+===== delay-test.out =====
+Files delay-test.out and ../delay-test.out are identical
+===== process-test.out =====
+Files process-test.out and ../process-test.out are identical
+===== random-test.out =====
+Files random-test.out and ../random-test.out are identical
+===== sizeof-all-32.out =====
+***** NOT COMPARED ***** 
+===== sizeof-all-64.out =====
+4c4
+< SIMLIB Version  = SIMLIB 3.03 (Nov 26 2013 15:05:31)
+---
+> SIMLIB Version  = SIMLIB 3.03 (Mar 26 2014 22:47:41)
+===== test-calendar.out =====
+Files test-calendar.out and ../test-calendar.out are identical
+===== waituntil-test.out =====
+Files waituntil-test.out and ../waituntil-test.out are identical
+===== zdelay-test.out =====
+Files zdelay-test.out and ../zdelay-test.out are identical
