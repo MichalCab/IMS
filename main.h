@@ -8,5 +8,8 @@ typedef struct
     int N_KOMORY;  // pocet komor
     Facility *Komory;                      // komory
     Facility *Kilometry;                 // kilometry
+    int *TUNELY;
+    int N_TUNELY;
+    Facility *Tunely;
 } Trasa;
 

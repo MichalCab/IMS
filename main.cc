@@ -20,7 +20,8 @@ const double T_KON = 365*24;    // kolik simulovanych hodin
 const double T_PLNENI_KOMORY = 14/60;                   // doba plnění komory
 const double T_VJEZD_A_VYJEZD_LODI_DO_Z_KOMORY  = 20/60;    // doba obsluhy lodě
 const double T_OBSLUHY_KOMORY = T_PLNENI_KOMORY + T_VJEZD_A_VYJEZD_LODI_DO_Z_KOMORY;
-const double T_RYCHLOST_LODI = 60/17;                    // doba za kterou lod projde kilometr
+const double T_PRUJEZD_TUNELEM = (60/10)/60;
+const double T_RYCHLOST_LODI = (60/17)/60;                    // doba za kterou lod projde kilometr
 
 double T_PRICH = 1;                         // příchod lodi
 double CENA_KONTEJNR = 50;                  // priblizna cena za naklad a vyklad jednoho kontejneru
@@ -31,47 +32,35 @@ unsigned CelkovyPocLodi = 0;                // celkový počet lodí
 unsigned PocLodiNaKoridoru = 0;                // aktuální počet lodí na trase
 unsigned CelkovyPocetKilometru = 0;
 
-const int N_TRASY = 10;
-//Trasa Trasy[N_TRASY];
-Facility PrerovOstravaKomory[4];
-Facility PrerovOstravaKilometry[18888];
-Facility OstravaPrerovKomory[4];
-Facility OstravaPrerovKilometry[147];
-Facility Tunely[];
-Facility OstravaKozleKomory[4];
-Facility OstravaKozleKilometry[53];
-Facility KozleOstravaKomory[4];
-Facility KozleOstravaKilometry[53];
-Facility Tunely[];
-Facility DunajHodoninKomory[4];
-Facility DunajHodoninKilometry[98];
-Facility HodoninDunajKomory[4];
-Facility HodoninDunajKilometry[98];
-Facility Tunely[];
-Facility HodoninPrerovKunoviceKomory[4];
-Facility HodoninPrerovKunoviceKilometry[90];
-Facility KunovicePrerovHodoninKomory[4];
-Facility KunovicePrerovHodoninKilometry[90];
-Facility Tunely[];
-Facility KunovicePardubiceKomory[4];
-Facility KunovicePardubiceKilometry[120];
-Facility PardubiceKunoviceKomory[4];
-Facility PardubiceKunoviceKilometry[120];
-Facility Tunely[];
+const int N_TRASY = 6;
+
+Facility OdraTamKomory[8];
+Facility OdraTamKilometry[98];
+Facility OdraZpetKomory[8];
+Facility OdraZpetKilometry[98];
+Facility OdraTunely[2];
+
+Facility DunajTamKomory[8];
+Facility DunajTamKilometry[118];
+Facility DunajZpetKomory[8];
+Facility DunajZpetKilometry[118];
+Facility DunajTunely[1];
+
+Facility LabeTamKomory[16];
+Facility LabeTamKilometry[154];
+Facility LabeZpetKomory[16];
+Facility LabeZpetKilometry[154];
+Facility LabeTunely[6];
 
 Trasa Trasy[N_TRASY] = {
-        {"PrerovOstrava", 98, (int[]){9, 16,  53, 69, 74, 76, 82, 88}, 8, PrerovOstravaKomory, PrerovOstravaKilometry, (int[]){22, 34}, 2, OdraTunely},
-        {"PrerovOstrava", 98, (int[]){9, 16,  53, 69, 74, 76, 82, 88}, 8, PrerovOstravaKomory, PrerovOstravaKilometry, (int[]){22, 34}, 2, OdraTunely},
+        {"OdraTam", 98, (int[]){9, 16,  53, 69, 74, 76, 82, 88}, 8, OdraTamKomory, OdraTamKilometry, (int[]){22, 34}, 2, OdraTunely},
+        {"OdraZpět", 98, (int[]){9, 16,  53, 69, 74, 76, 82, 88}, 8, OdraZpetKomory, OdraZpetKilometry, (int[]){22, 34}, 2, OdraTunely},
 
-        {"OstravaKozle", 53, (int[]){40, 60,  90, 130}, 4, OstravaKozleKomory, OstravaKozleKilometry},
-        {"KozleOstrava", 53, (int[]){40, 60,  90, 130}, 4, KozleOstravaKomory, KozleOstravaKilometry},
+        {"DunajTam", 118, (int[]){1, 12,  22,27, 54, 83, 92, 99}, 8, DunajTamKomory, DunajTamKilometry}, (int[]){108}, 1, DunajTunely},
+        {"DunajZpet", 118, (int[]){1, 12,  22,27, 54, 83, 92, 99}, 8, DunajZpetKomory, DunajZpetKilometry}, (int[]){108}, 1, DunajTunely},
 
-        {"DunajHodonin", 98, (int[]){40, 60,  90, 130}, 4, DunajHodoninKomory, DunajHodoninKilometry},
-        {"HodoninDunaj", 98, (int[]){40, 60,  90, 130}, 4, HodoninDunajKomory, HodoninDunajKilometry},
-        {"HodoninPrerovKunovice", 90, (int[]){40, 60,  90, 130}, 4, HodoninPrerovKunoviceKomory, HodoninPrerovKunoviceKilometry},
-        {"KunovicePrerovHodonin", 90, (int[]){40, 60,  90, 130}, 4, KunovicePrerovHodoninKomory, KunovicePrerovHodoninKilometry},
-        {"KunovicePardubice", 120, (int[]){40, 60,  90, 130}, 4, KunovicePardubiceKomory, KunovicePardubiceKilometry},
-        {"PardubiceKunovice", 130, (int[]){40, 60,  90, 130}, 4, PardubiceKunoviceKomory, PardubiceKunoviceKilometry},
+        {"LabeTam", 154, (int[]){44, 51, 61, 66, 68, 69, 70, 99, 114, 116, 118, 119, 123, 139, 153}, 16, LabeTamKomory, LabeTamKilometry}, (int[]){52, 94, 97, 107, 111, 129}, 6, LabeTunely},
+        {"LabeZpet", 154, (int[]){44, 51, 61, 66, 68, 69, 70, 99, 114, 116, 118, 119, 123, 139, 153}, 16, LabeZpetKomory, LabeZpetKilometry}, (int[]){52, 94, 97, 107, 111, 129}, 6, LabeTunely},
     };
 
 class Lod : public Process {
@@ -85,6 +74,7 @@ class Lod : public Process {
         UjetychKilometru = 0;
         while (UjetychKilometru < Trasy[TrasaId].N_KILOMETRY)      // dokud má kam jet
         {
+            // KOMORY
             int poziceKomory = -1;
             for (int i = 0; i < Trasy[TrasaId].N_KOMORY; i++)      // Cyklus kontrolujici, zda jde lod do plavebni komory
             {
@@ -100,6 +90,27 @@ class Lod : public Process {
                 Wait(T_OBSLUHY_KOMORY);             // Lod ceka na dokonceni obsluhy plavebni komory aby mohla plout dal
                 Release(Trasy[TrasaId].Komory[poziceKomory]);      // Opousti plavebni komoru
             }
+    
+            // TUNELY
+            int poziceTunelu = -1;
+            for (int i = 0; i < Trasy[TrasaId].N_TUNELY; i++)      // Cyklus kontrolujici, zda jde lod do tunelu
+            {
+                if (Trasy[TrasaId].TUNELY[i] == UjetychKilometru)
+                {
+                    poziceTunelu = i;
+                    break;
+                }
+            }
+            if (poziceTunelu != -1)                 // pokud je na daném kilometru komora, vjede do ní
+            {
+                Seize(Trasy[TrasaId].Tunely[poziceTunelu]);        // Lod obsazuje plavebni komoru
+                Wait(T_PRUJEZD_TUNELEM);             // Lod ceka na dokonceni obsluhy plavebni komory aby mohla plout dal
+                Release(Trasy[TrasaId].Tunely[poziceTunelu]);      // Opousti plavebni komoru
+                UjetychKilometru++;
+                CelkovyPocetKilometru++;
+            }
+
+            // JIZDA
             Seize(Trasy[TrasaId].Kilometry[UjetychKilometru]);      // Lod pluje, obsazuje dalsi kilometr
             if (LodVyjela == false)                 // Tohle je za potrebi v pripade, ze lod chce vyplout priliz brzo, kdy neni ani prvni kilometr volny
             {
