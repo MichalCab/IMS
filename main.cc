@@ -1,10 +1,18 @@
 #include <string>
 #include <sstream>
 
-#include "simlib.h"
 #include "main.h"
 
 using namespace std;
+
+
+
+// char NazovTrasy = "Trasa1";
+// int N_KILOMETRY = 150;                          // celkem kilometru na trase
+// int KOMORY[] = {40, 60,  90, 130};              // na jakych kilometrech jsou komory
+// int N_KOMORY = (sizeof(KOMORY) / sizeof(int));  // pocet komor
+// Facility Komora[N_KOMORY];                      // komory
+// Facility Kilometr[N_KILOMETRY];                 // kilometry
 
 // definice konstant
 const double T_KON = 365*24;    // kolik simulovanych hodin
@@ -12,7 +20,7 @@ const double T_KON = 365*24;    // kolik simulovanych hodin
 const double T_PLNENI_KOMORY = 14/60;                   // doba plnění komory
 const double T_VJEZD_A_VYJEZD_LODI_DO_Z_KOMORY  = 20/60;    // doba obsluhy lodě
 const double T_OBSLUHY_KOMORY = T_PLNENI_KOMORY + T_VJEZD_A_VYJEZD_LODI_DO_Z_KOMORY;
-const double T_RYCHLOST_LODI = 0.07;                    // doba za kterou lod projde kilometr
+const double T_RYCHLOST_LODI = 60/17;                    // doba za kterou lod projde kilometr
 
 double T_PRICH = 1;                         // příchod lodi
 double CENA_KONTEJNR = 50;                  // priblizna cena za naklad a vyklad jednoho kontejneru
@@ -23,20 +31,64 @@ unsigned CelkovyPocLodi = 0;                // celkový počet lodí
 unsigned PocLodiNaKoridoru = 0;                // aktuální počet lodí na trase
 unsigned CelkovyPocetKilometru = 0;
 
+const int N_TRASY = 10;
+//Trasa Trasy[N_TRASY];
+Facility PrerovOstravaKomory[4];
+Facility PrerovOstravaKilometry[18888];
+Facility OstravaPrerovKomory[4];
+Facility OstravaPrerovKilometry[147];
+Facility Tunely[];
+Facility OstravaKozleKomory[4];
+Facility OstravaKozleKilometry[53];
+Facility KozleOstravaKomory[4];
+Facility KozleOstravaKilometry[53];
+Facility Tunely[];
+Facility DunajHodoninKomory[4];
+Facility DunajHodoninKilometry[98];
+Facility HodoninDunajKomory[4];
+Facility HodoninDunajKilometry[98];
+Facility Tunely[];
+Facility HodoninPrerovKunoviceKomory[4];
+Facility HodoninPrerovKunoviceKilometry[90];
+Facility KunovicePrerovHodoninKomory[4];
+Facility KunovicePrerovHodoninKilometry[90];
+Facility Tunely[];
+Facility KunovicePardubiceKomory[4];
+Facility KunovicePardubiceKilometry[120];
+Facility PardubiceKunoviceKomory[4];
+Facility PardubiceKunoviceKilometry[120];
+Facility Tunely[];
+
+Trasa Trasy[N_TRASY] = {
+        {"PrerovOstrava", 98, (int[]){9, 16,  53, 69, 74, 76, 82, 88}, 8, PrerovOstravaKomory, PrerovOstravaKilometry, (int[]){22, 34}, 2, OdraTunely},
+        {"PrerovOstrava", 98, (int[]){9, 16,  53, 69, 74, 76, 82, 88}, 8, PrerovOstravaKomory, PrerovOstravaKilometry, (int[]){22, 34}, 2, OdraTunely},
+
+        {"OstravaKozle", 53, (int[]){40, 60,  90, 130}, 4, OstravaKozleKomory, OstravaKozleKilometry},
+        {"KozleOstrava", 53, (int[]){40, 60,  90, 130}, 4, KozleOstravaKomory, KozleOstravaKilometry},
+
+        {"DunajHodonin", 98, (int[]){40, 60,  90, 130}, 4, DunajHodoninKomory, DunajHodoninKilometry},
+        {"HodoninDunaj", 98, (int[]){40, 60,  90, 130}, 4, HodoninDunajKomory, HodoninDunajKilometry},
+        {"HodoninPrerovKunovice", 90, (int[]){40, 60,  90, 130}, 4, HodoninPrerovKunoviceKomory, HodoninPrerovKunoviceKilometry},
+        {"KunovicePrerovHodonin", 90, (int[]){40, 60,  90, 130}, 4, KunovicePrerovHodoninKomory, KunovicePrerovHodoninKilometry},
+        {"KunovicePardubice", 120, (int[]){40, 60,  90, 130}, 4, KunovicePardubiceKomory, KunovicePardubiceKilometry},
+        {"PardubiceKunovice", 130, (int[]){40, 60,  90, 130}, 4, PardubiceKunoviceKomory, PardubiceKunoviceKilometry},
+    };
+
 class Lod : public Process {
     unsigned int UjetychKilometru;
-    int LodId;
     bool LodVyjela;
+    int TrasaId;
+    
     void Behavior()       // popis chování lodi
     {
         LodVyjela = false;
         UjetychKilometru = 0;
-        while (UjetychKilometru < N_KILOMETRY && 1)      // dokud má kam jet
+        while (UjetychKilometru < Trasy[TrasaId].N_KILOMETRY)      // dokud má kam jet
         {
             int poziceKomory = -1;
-            for (int i = 0; i < N_KOMORY; i++)      // Cyklus kontrolujici, zda jde lod do plavebni komory
+            for (int i = 0; i < Trasy[TrasaId].N_KOMORY; i++)      // Cyklus kontrolujici, zda jde lod do plavebni komory
             {
-                if (KOMORY[i] == UjetychKilometru)
+                if (Trasy[TrasaId].KOMORY[i] == UjetychKilometru)
                 {
                     poziceKomory = i;
                     break;
@@ -44,20 +96,19 @@ class Lod : public Process {
             }
             if (poziceKomory != -1)                 // pokud je na daném kilometru komora, vjede do ní
             {
-                Seize(Komora[poziceKomory]);        // Lod obsazuje plavebni komoru
+                Seize(Trasy[TrasaId].Komory[poziceKomory]);        // Lod obsazuje plavebni komoru
                 Wait(T_OBSLUHY_KOMORY);             // Lod ceka na dokonceni obsluhy plavebni komory aby mohla plout dal
-                Release(Komora[poziceKomory]);      // Opousti plavebni komoru
+                Release(Trasy[TrasaId].Komory[poziceKomory]);      // Opousti plavebni komoru
             }
-            Seize(Kilometr[UjetychKilometru]);      // Lod pluje, obsazuje dalsi kilometr
+            Seize(Trasy[TrasaId].Kilometry[UjetychKilometru]);      // Lod pluje, obsazuje dalsi kilometr
             if (LodVyjela == false)                 // Tohle je za potrebi v pripade, ze lod chce vyplout priliz brzo, kdy neni ani prvni kilometr volny
             {
                 PocLodiNaKoridoru++;                   // Na trase se nachazi o lod navic
                 CelkovyPocLodi++;                   // Pribiva dalsi lod za celkovy cas simulace
-                LodId = CelkovyPocLodi;             // Identifikace cisla lodi na trase
                 LodVyjela = true;                   // Lod vyjela
             }
             Wait(T_RYCHLOST_LODI);                  // Lod pluje obsazeny kilometr
-            Release(Kilometr[UjetychKilometru]);    // Lod opousti obsazeny kilometr, uvolnuje
+            Release(Trasy[TrasaId].Kilometry[UjetychKilometru]);    // Lod opousti obsazeny kilometr, uvolnuje
             
             UjetychKilometru++;                     // Lod proplula dalsi kilometr
             CelkovyPocetKilometru++;                // Na tomhle useku bylo lodi najeto dalsi kilometr
@@ -67,24 +118,39 @@ class Lod : public Process {
 public:
     void init(int id)
     {
-        LodId = id;
+        TrasaId = id;
         Activate();
     }
 };
 
 class Generator : public Event {
-    void Behavior() {
-        (new Lod)->init(1);
+    int TrasaId;
+    void Behavior() 
+    {
+        (new Lod)->init(TrasaId);
         Activate(Time + Exponential(T_PRICH));
+    }
+public:
+    void init(int TrasaId)
+    {
+        TrasaId = TrasaId;
+        Activate();
     }
 };
 
 int main() {
-    T_PRICH = 24;
+    //Trasa t1 = {"Trasa 1", 150, (int[]){40, 60,  90, 130}, 4, Komory, Kilometry};
+    
+    //Trasa t2 = {"Trasa 2", 150, (int[]){40, 60,  90, 130}, 4, Komory, Kilometry};
+    //Trasy[0] = t1;
+    //Trasy[1] = t2;
+
+    
     Init(0, T_KON);
-    
-    (new Generator)->Activate();
-    
+    //for (int i = 0; i < N_TRASY; i++)
+    //{   
+    (new Generator)->init(0);
+    //}   
     Print(" DOL --- simulace průjezdu nákladních lodí\n");
     Run();
     

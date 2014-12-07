@@ -20,7 +20,7 @@ CXXFLAGS += -I$(SIMLIB_DIR)
 all: main
 
 #
-main: main $(SIMLIB_DEPEND)
+main: main.o $(SIMLIB_DEPEND)
 
 #
 run:
