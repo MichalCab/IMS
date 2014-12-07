@@ -19,6 +19,8 @@
 *.so
 *.so.*
 *.dylib
+simlib/src/simlib.nm
+simlib/src/generr
 
 # Executables
 *.exe
@@ -29,3 +31,4 @@
 *.hex
 simlib/examples/*
 simlib/tests/*
+dol
