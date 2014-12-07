@@ -30,7 +30,7 @@ plot: run
 	@./0-plot-all-ps.sh
 
 clean:
-	rm -f $(ALL_MODELS) gmon.out
+	rm -f dol gmon.out
 
 clean-data:
 	rm -f *.dat *.out *.png *.ps reference-outputs/*.log

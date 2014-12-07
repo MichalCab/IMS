@@ -15,12 +15,12 @@ const double T_PLNENI_KOMORY  = 14/60;   // doba plnění komory
 const double T_VJEZD_LODI_DO_KOMORY  = 10/60;   // doba obsluhy lodě
 const double T_OBSLUHY = T_PLNENI_KOMORY + T_VJEZD_LODI_DO_KOMORY;
 const double T_PRICH = 1; // příchod lodi
-const double T_RYCHLOST_LODI = 18*60;
+const double T_RYCHLOST_LODI = 0.3;
 
-const int N_KOMORY = 9;
 const int N_KILOMETRY = 150;
 
 const int KOMORY[] = {40, 90, 130}; // na jakych kilometrech jsou komory
+const int N_KOMORY = (sizeof(KOMORY) / sizeof(const int));
 
 // deklarace globalnich objektu
 Facility Komora[N_KOMORY];           // komora
@@ -28,6 +28,7 @@ Facility Kilometr[N_KILOMETRY];
 
 unsigned CelkovyPocLodi = 0; // celkový počet lodí
 unsigned PocLodiNaTrase = 0;    // aktuální počet lodí na trase
+unsigned CelkovyPocetKilometru = 0;
 
 Histogram Tabulka ("Českací doby lodi",0,0.15,20);
 
@@ -36,33 +37,37 @@ using namespace std;
 class Lod : public Process {  // 
   double Vyjezd;               // čas vjezdu lodě do systému
   unsigned int UjetychKilometru;
-  unsigned int Komor;
+  int jaLod;
   void Behavior() // popis chování lodi
   {
     Vyjezd = Time;
     PocLodiNaTrase++;
     CelkovyPocLodi++;
+	jaLod = CelkovyPocLodi;
     while (UjetychKilometru < N_KILOMETRY) // dokud má kam jet
     {
-        bool found = false;
-        for (int i = 0; i < sizeof(KOMORY) * sizeof(int); i++)
+		Print("test%d: %d\n", jaLod, UjetychKilometru);
+        int poziceKomory = -1;
+        for (int i = 0; i < N_KOMORY; i++)
         {
             if (KOMORY[i] == UjetychKilometru)
             {
-                found = true;
+                poziceKomory = i;
                 break;
             }
         }
-        if (found)// pokud je na daném kilometru komora, vjede do ní
+        if (poziceKomory != -1)// pokud je na daném kilometru komora, vjede do ní
         {
-            Seize(Komora[Komor]);
+			Print("Jez\n");
+            Seize(Komora[poziceKomory]);
             Wait(T_OBSLUHY);
-            Release(Komora[Komor]);
+            Release(Komora[poziceKomory]);
         }
         Seize(Kilometr[UjetychKilometru]);
         Wait(T_RYCHLOST_LODI);
-        UjetychKilometru++;
-        Release(Kilometr[UjetychKilometru-1]);
+        Release(Kilometr[UjetychKilometru]);
+		UjetychKilometru++;
+		CelkovyPocetKilometru++;
     }
     PocLodiNaTrase--; // loď odplouvá ze systéme
     Tabulka(Time - Vyjezd);    // záznam o výjezdu
@@ -92,6 +97,7 @@ int main() {
     Run();                      // simulation
     Print("\n Systémem nestihlo projet %u lodí, které by chtěly \n\n", PocLodiNaTrase);
     Print("\n Systémem prošlo %u lodí \n\n", CelkovyPocLodi);
+    Print("\n Najeto kilometru celkem %u \n\n", CelkovyPocetKilometru);
     Tabulka.Output();
     SIMLIB_statistics.Output(); // print run statistics
 }
