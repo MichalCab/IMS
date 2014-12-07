@@ -17,29 +17,17 @@ CXXFLAGS += -I$(SIMLIB_DIR)
 	$(CXX) $(CXXFLAGS) -o $@  $< $(SIMLIB_DIR)/simlib.so -lm
 
 # Rules:
-all: dol
+all: main
 
 #
-dol:   dol.cc $(SIMLIB_DEPEND)
+main: main $(SIMLIB_DEPEND)
 
 #
 run:
-	./dol
-
-plot: run
-	@./0-plot-all-ps.sh
+	./main
 
 clean:
-	rm -f dol gmon.out
-
-clean-data:
-	rm -f *.dat *.out *.png *.ps reference-outputs/*.log
+	rm -f main gmon.out
 
 clean-all: clean clean-data
-
-REFOUT=reference-outputs/*.dat reference-outputs/*.out reference-outputs/*.sh
-
-pack:
-	tar czf examples.tar.gz *.cc *.plt *.txt *.sh Makefile.* $(REFOUT)
-
 #
