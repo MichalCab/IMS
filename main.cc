@@ -2,6 +2,7 @@
 #include <sstream>
 
 #include "simlib.h"
+#include "main.h"
 
 using namespace std;
 
@@ -21,12 +22,6 @@ double L_MIN_KAPACITA = 200;                // minimalni zaplnena kapacita pro v
 unsigned CelkovyPocLodi = 0;                // celkový počet lodí
 unsigned PocLodiNaKoridoru = 0;                // aktuální počet lodí na trase
 unsigned CelkovyPocetKilometru = 0;
-
-const int N_KILOMETRY = 150;                            // celkem kilometru na trase
-const int KOMORY[] = {40, 60,  90, 130};                // na jakych kilometrech jsou komory
-const int N_KOMORY = (sizeof(KOMORY) / sizeof(int));    // pocet komor
-Facility Komora[N_KOMORY];                  // komory
-Facility Kilometr[N_KILOMETRY];             // kilometry
 
 class Lod : public Process {
     unsigned int UjetychKilometru;
