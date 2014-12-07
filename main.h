@@ -1,3 +1,7 @@
+#include <string>
+#include <sstream>
+#include <stdlib.h>
+
 #include "simlib.h"
 
 typedef struct 
@@ -11,5 +15,6 @@ typedef struct
     int *TUNELY;
     int N_TUNELY;
     Facility *Tunely;
+    int Direction;
 } Trasa;
 

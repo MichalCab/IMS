@@ -19,8 +19,7 @@ CXXFLAGS += -I$(SIMLIB_DIR)
 # Rules:
 all: main
 
-#
-main: main.o $(SIMLIB_DEPEND)
+#dol: main $(SIMLIB_DEPEND)
 
 #
 run:
