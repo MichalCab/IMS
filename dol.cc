@@ -19,7 +19,7 @@ const double T_RYCHLOST_LODI = 0.3;
 
 const int N_KILOMETRY = 150;
 
-const int KOMORY[] = {40, 90, 130}; // na jakych kilometrech jsou komory
+const int KOMORY[] = {40, 60,  90, 130}; // na jakych kilometrech jsou komory
 const int N_KOMORY = (sizeof(KOMORY) / sizeof(const int));
 
 // deklarace globalnich objektu
@@ -30,23 +30,22 @@ unsigned CelkovyPocLodi = 0; // celkový počet lodí
 unsigned PocLodiNaTrase = 0;    // aktuální počet lodí na trase
 unsigned CelkovyPocetKilometru = 0;
 
-Histogram Tabulka ("Českací doby lodi",0,0.15,20);
+Histogram Tabulka ("Čekací doby lodi",0,0.15,20);
 
 using namespace std;
 
 class Lod : public Process {  // 
   double Vyjezd;               // čas vjezdu lodě do systému
   unsigned int UjetychKilometru;
-  int jaLod;
+  int LodId;
   void Behavior() // popis chování lodi
   {
     Vyjezd = Time;
     PocLodiNaTrase++;
     CelkovyPocLodi++;
-	jaLod = CelkovyPocLodi;
+	LodId = CelkovyPocLodi;
     while (UjetychKilometru < N_KILOMETRY) // dokud má kam jet
     {
-		Print("test%d: %d\n", jaLod, UjetychKilometru);
         int poziceKomory = -1;
         for (int i = 0; i < N_KOMORY; i++)
         {
@@ -58,7 +57,6 @@ class Lod : public Process {  //
         }
         if (poziceKomory != -1)// pokud je na daném kilometru komora, vjede do ní
         {
-			Print("Jez\n");
             Seize(Komora[poziceKomory]);
             Wait(T_OBSLUHY);
             Release(Komora[poziceKomory]);
