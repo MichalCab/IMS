@@ -30,6 +30,7 @@ double T_VYPLUTI_LODI = 24;                            // příchod lodi
 double CENA_KONTEJNR = 50;                  // priblizna cena za naklad a vyklad jednoho kontejneru
 double L_KAPACITA = 470;                    // kapacita lodi v poctu kontejneru
 double L_MIN_KAPACITA = 200;                // minimalni zaplnena kapacita pro vypluti lode
+double T_TRVANI_PORUCHY = 24*4;
 
 Trasa Trasy[N_TRASY] = {
         {"OdraTam", 98, (unsigned int[]){9, 16,  53, 69, 74, 76, 82, 88}, 8, OdraTamKomory, OdraTamKilometry, (unsigned int[]){22, 34}, 2, OdraTunely, 1},
@@ -49,6 +50,21 @@ private:
     {
         (new Lod)->init(TrasaId);
         Activate(Time + Exponential(T_VYPLUTI_LODI));
+    }
+public:
+    void init(int TrasaId)
+    {
+        TrasaId = TrasaId;
+        Activate();
+    }
+};
+
+class GeneratorPoruch : public Event {
+private:
+    void Behavior()
+    {
+        (new Lod)->init(TrasaId);
+        Activate(Time + Exponential(T_));
     }
 public:
     void init(int TrasaId)

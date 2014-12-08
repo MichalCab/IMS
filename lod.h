@@ -43,6 +43,7 @@ const double T_PRUJEZD_TUNELEM = (60/10)/60;
 const double T_RYCHLOST_LODI = (60/17)/60;                    // doba za kterou lod projde kilometr
 
 extern double T_VYPLUTI_LODI;                            // příchod lodi
+extern double T_TRVANI_PORUCHY;
 extern double CENA_KONTEJNR;                  // priblizna cena za naklad a vyklad jednoho kontejneru
 extern double L_KAPACITA;                    // kapacita lodi v poctu kontejneru
 extern double L_MIN_KAPACITA;

@@ -20,6 +20,11 @@ void Lod::handleKomora()
     if (poziceKomory != -1)                 // pokud je na dan?m kilometru komora, vjede do n?
     {
         Seize(Trasy[TrasaId].Komory[poziceKomory]);        // Lod obsazuje plavebni komoru
+        if (Random(1))
+        {
+            Wait(Exponential(T_OPRAVA_PORUCHY));
+        }
+        
         Wait(T_OBSLUHY_KOMORY);             // Lod ceka na dokonceni obsluhy plavebni komory aby mohla plout dal
         Release(Trasy[TrasaId].Komory[poziceKomory]);      // Opousti plavebni komoru
     }
