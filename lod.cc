@@ -3,7 +3,7 @@
 void Lod::posunoutLod()
 {
     AktualniKilometr += Trasy[TrasaId].Direction;   // Lod proplula dalsi kilometr
-    CelkovyPocetKilometru++;                        // Na celem koridoru bylo lodma najeto dalsi kilometr
+    TrasaKilometry[TrasaId]++;                      // Pripoctem hodnotu najetych kilometru na konkretni trase
 }
 
 void Lod::handleKomora()
@@ -20,9 +20,9 @@ void Lod::handleKomora()
     if (poziceKomory != -1)                 // pokud je na dan?m kilometru komora, vjede do n?
     {
         Seize(Trasy[TrasaId].Komory[poziceKomory]);        // Lod obsazuje plavebni komoru
-        if (Random(1))
+        if ((int)(Random()*(double)PRAVDEPODOBNOST_PORUCHY) == 0)
         {
-            Wait(Exponential(T_OPRAVA_PORUCHY));
+            Wait(Exponential(T_TRVANI_PORUCHY));
         }
         
         Wait(T_OBSLUHY_KOMORY);             // Lod ceka na dokonceni obsluhy plavebni komory aby mohla plout dal
@@ -55,9 +55,9 @@ void Lod::handlePlavba()
     Seize(Trasy[TrasaId].Kilometry[AktualniKilometr]);      // Lod pluje, obsazuje dalsi kilometr
     if (LodVyjela == false)                 // Tohle je za potrebi v pripade, ze lod chce vyplout priliz brzo, kdy neni ani prvni kilometr volny
     {
-        PocLodiNaKoridoru++;                   // Na trase se nachazi o lod navic
-        CelkovyPocLodi++;                   // Pribiva dalsi lod za celkovy cas simulace
         LodVyjela = true;                   // Lod vyjela
+        PocetLodi[TrasaId]++;
+        PocetZaseklychLodi[TrasaId]++;
     }
     Wait(T_RYCHLOST_LODI);                  // Lod pluje obsazeny kilometr
     Release(Trasy[TrasaId].Kilometry[AktualniKilometr]);    // Lod opousti obsazeny kilometr, uvolnuje
@@ -69,7 +69,7 @@ void Lod::Behavior() // popis chov?n? lodi
     LodVyjela = false;
     
     if (Trasy[TrasaId].Direction == -1)
-        AktualniKilometr = Trasy[TrasaId].N_KILOMETRY;
+        AktualniKilometr = Trasy[TrasaId].N_KILOMETRY - 1;
     else
         AktualniKilometr = 0;
     
@@ -78,7 +78,8 @@ void Lod::Behavior() // popis chov?n? lodi
         handleTunel();  // Tunely
         handlePlavba(); // Plavba
     }
-    PocLodiNaKoridoru--;    // lod konci svou plavbu, vyklada svuj naklad
+    
+    PocetZaseklychLodi[TrasaId]--;
 }
 
 void Lod::init(int id)
