@@ -1,6 +1,4 @@
-#include "simlib.h"
 #include "lod.h"
-#include "main.h"
 
 void Lod::posunoutLod()
 {
@@ -19,7 +17,7 @@ void Lod::handleKomora()
             break;
         }
     }
-    if (poziceKomory != -1)                 // pokud je na daném kilometru komora, vjede do ní
+    if (poziceKomory != -1)                 // pokud je na dan?m kilometru komora, vjede do n?
     {
         Seize(Trasy[TrasaId].Komory[poziceKomory]);        // Lod obsazuje plavebni komoru
         Wait(T_OBSLUHY_KOMORY);             // Lod ceka na dokonceni obsluhy plavebni komory aby mohla plout dal
@@ -38,7 +36,7 @@ void Lod::handleTunel()
             break;
         }
     }
-    if (poziceTunelu != -1)                 // pokud je na daném kilometru komora, vjede do ní
+    if (poziceTunelu != -1)                 // pokud je na dan?m kilometru komora, vjede do n?
     {
         Seize(Trasy[TrasaId].Tunely[poziceTunelu]);        // Lod obsazuje plavebni komoru
         Wait(T_PRUJEZD_TUNELEM);             // Lod ceka na dokonceni obsluhy plavebni komory aby mohla plout dal
@@ -61,7 +59,7 @@ void Lod::handlePlavba()
     posunoutLod();                            // Na celem koridoru bylo lodma najeto dalsi kilometr
 }
 
-void Lod::Behavior() // popis chování lodi
+void Lod::Behavior() // popis chov?n? lodi
 {
     LodVyjela = false;
     

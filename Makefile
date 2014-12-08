@@ -1,4 +1,3 @@
-
 SIMLIB_DIR=simlib/src
 
 CXX=g++ -m64
@@ -7,22 +6,25 @@ CXXFLAGS += -I$(SIMLIB_DIR)
 
 SIMLIB_DEPEND=$(SIMLIB_DIR)/simlib.so $(SIMLIB_DIR)/simlib.h
 
-% : %.cc
-    @#$(CXX) $(CXXFLAGS) -static -o $@  $< $(SIMLIB_DIR)/simlib.a -lm
-    $(CXX) $(CXXFLAGS) -o $@  $< $(SIMLIB_DIR)/simlib.so -lm
+main: main.cc lod.cc
+	$(CXX) $(CXXFLAGS) main.cc lod.cc -o dol $(SIMLIB_DIR)/simlib.so -lm
+
+lod.o: lod.cc
+	$(CXX) $(CXXFLAGS) -c lod.cc
+
+main.o: main.cc
+	$(CXX) $(CXXFLAGS) -c main.cc
+
+
 
 # Rules:
-all: dol
-    
-
-dol: main lod $(SIMLIB_DEPEND)
-    
+all: main $(SIMLIB_DEPEND)  
 
 run:
-    ./main
+	./main
 
 clean:
-    rm -f main gmon.out
+	rm -f *.o main gmon.out
 
 clean-all: clean clean-data
 #
