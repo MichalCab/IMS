@@ -4,7 +4,7 @@ main: main.cc lod.cc
 all: main
 
 run:
-	./main
+	./dol
 
 clean:
 	rm -f *.o dol gmon.out
